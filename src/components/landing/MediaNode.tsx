@@ -56,60 +56,58 @@ export const MediaNode: React.FC<MediaNodeProps> = ({
 
   return (
     <group position={position}>
-      {/* Main cube node */}
+      {/* Main cube node with neon glow */}
       <mesh
         ref={meshRef}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         onClick={onClick}
       >
-        <boxGeometry args={[0.4, 0.4, 0.4]} />
+        <boxGeometry args={[0.5, 0.5, 0.5]} />
         <meshStandardMaterial
-          color={isHighlighted ? "#fef08a" : "#fde047"}
-          emissive={isHighlighted ? "#f59e0b" : "#eab308"}
-          emissiveIntensity={isHighlighted ? 0.3 : 0.1}
-          opacity={isDimmed ? 0.3 : 1}
+          color="#ffffff"
+          emissive="#ffffff"
+          emissiveIntensity={isHighlighted ? 0.8 : 0.4}
+          opacity={isDimmed ? 0.2 : 1}
           transparent
-          roughness={0.3}
-          metalness={0.6}
+          roughness={0.1}
+          metalness={0.9}
         />
       </mesh>
 
-      {/* Wireframe overlay for highlighted state */}
-      {isHighlighted && (
-        <mesh>
-          <boxGeometry args={[0.45, 0.45, 0.45]} />
-          <meshBasicMaterial
-            color="#fde047"
-            wireframe
-            opacity={0.6}
-            transparent
-          />
-        </mesh>
-      )}
+      {/* Wireframe glow overlay */}
+      <mesh>
+        <boxGeometry args={[isHighlighted ? 0.7 : 0.6, isHighlighted ? 0.7 : 0.6, isHighlighted ? 0.7 : 0.6]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          wireframe
+          opacity={isHighlighted ? 0.6 : 0.2}
+          transparent
+        />
+      </mesh>
 
       {/* Corner accent cubes for highlighted state */}
       {isHighlighted && Array.from({ length: 4 }).map((_, i) => (
         <mesh
           key={i}
           position={[
-            (i % 2 === 0 ? -1 : 1) * 0.6,
-            (i < 2 ? -1 : 1) * 0.6,
+            (i % 2 === 0 ? -1 : 1) * 0.8,
+            (i < 2 ? -1 : 1) * 0.8,
             0
           ]}
         >
-          <boxGeometry args={[0.08, 0.08, 0.08]} />
-          <meshBasicMaterial color="#c4b5fd" />
+          <boxGeometry args={[0.1, 0.1, 0.1]} />
+          <meshBasicMaterial color="#ffffff" />
         </mesh>
       ))}
 
       {/* Info popup on hover/selection */}
       {(hovered || isHighlighted) && (
-        <Html position={[0, 0.6, 0]} center>
-          <div className="bg-card/90 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg max-w-xs">
+        <Html position={[0, 0.8, 0]} center>
+          <div className="bg-background/95 backdrop-blur-sm neon-border rounded-lg p-3 shadow-lg max-w-xs">
             <h3 className="font-semibold text-foreground text-sm mb-1">{name}</h3>
             <p className="text-muted-foreground text-xs">{mediaType}</p>
-            <div className="mt-2 px-2 py-1 bg-media-node/20 rounded text-xs text-media-node font-medium">
+            <div className="mt-2 px-2 py-1 bg-foreground/10 neon-border rounded text-xs text-foreground font-medium">
               Media Project
             </div>
           </div>

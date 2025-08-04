@@ -55,60 +55,60 @@ export const CreatorNode: React.FC<CreatorNodeProps> = ({
 
   return (
     <group position={position}>
-      {/* Main sphere node */}
+      {/* Main sphere node with neon glow */}
       <mesh
         ref={meshRef}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         onClick={onClick}
       >
-        <sphereGeometry args={[0.3, 32, 32]} />
+        <sphereGeometry args={[0.4, 32, 32]} />
         <meshStandardMaterial
-          color={isHighlighted ? "#e879f9" : "#c4b5fd"}
-          emissive={isHighlighted ? "#7c3aed" : "#6366f1"}
-          emissiveIntensity={isHighlighted ? 0.3 : 0.1}
-          opacity={isDimmed ? 0.3 : 1}
+          color="#ffffff"
+          emissive="#ffffff"
+          emissiveIntensity={isHighlighted ? 0.8 : 0.4}
+          opacity={isDimmed ? 0.2 : 1}
           transparent
-          roughness={0.2}
-          metalness={0.8}
+          roughness={0.1}
+          metalness={0.9}
         />
       </mesh>
 
-      {/* Glow effect */}
-      {isHighlighted && (
-        <mesh>
-          <sphereGeometry args={[0.5, 16, 16]} />
-          <meshBasicMaterial
-            color="#c4b5fd"
-            opacity={0.2}
-            transparent
-            side={THREE.BackSide}
-          />
-        </mesh>
-      )}
+      {/* Outer glow ring */}
+      <mesh>
+        <sphereGeometry args={[isHighlighted ? 0.7 : 0.5, 16, 16]} />
+        <meshBasicMaterial
+          color="#ffffff"
+          opacity={isHighlighted ? 0.3 : 0.1}
+          transparent
+          side={THREE.BackSide}
+        />
+      </mesh>
 
       {/* Floating particles around highlighted node */}
-      {isHighlighted && Array.from({ length: 6 }).map((_, i) => (
+      {isHighlighted && Array.from({ length: 8 }).map((_, i) => (
         <mesh
           key={i}
           position={[
-            Math.cos((i / 6) * Math.PI * 2) * 0.8,
-            Math.sin((i / 6) * Math.PI * 2) * 0.8,
-            0
+            Math.cos((i / 8) * Math.PI * 2) * 1.0,
+            Math.sin((i / 8) * Math.PI * 2) * 1.0,
+            (Math.random() - 0.5) * 0.4
           ]}
         >
-          <sphereGeometry args={[0.02, 8, 8]} />
-          <meshBasicMaterial color="#fde047" />
+          <sphereGeometry args={[0.03, 8, 8]} />
+          <meshBasicMaterial 
+            color="#ffffff" 
+          />
         </mesh>
       ))}
 
       {/* Info popup on hover/selection */}
       {(hovered || isHighlighted) && (
-        <Html position={[0, 0.6, 0]} center>
-          <div className="bg-card/90 backdrop-blur-sm border border-border rounded-lg p-3 shadow-lg max-w-xs">
+        <Html position={[0, 0.8, 0]} center>
+          <div className="bg-background/95 backdrop-blur-sm neon-border rounded-lg p-3 shadow-lg max-w-xs">
             <h3 className="font-semibold text-foreground text-sm mb-1">{name}</h3>
             <p className="text-muted-foreground text-xs">{specialty}</p>
-            <div className="mt-2 px-2 py-1 bg-creator-node/20 rounded text-xs text-creator-node font-medium">
+            <div className="mt-2 px-2 py-1 bg-foreground/10 neon-border rounded text-xs text-foreground font-medium">
               Creator
             </div>
           </div>

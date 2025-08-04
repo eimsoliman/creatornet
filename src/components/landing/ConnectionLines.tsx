@@ -52,10 +52,10 @@ export const ConnectionLines: React.FC<ConnectionLinesProps> = ({
         <Line
           key={index}
           points={connection.points}
-          color={connection.isHighlighted ? "#e879f9" : "#64748b"}
-          opacity={connection.isHighlighted ? 0.8 : 0.3}
+          color={connection.isHighlighted ? "#ffffff" : "#666666"}
+          opacity={connection.isHighlighted ? 1.0 : 0.4}
           transparent
-          lineWidth={connection.isHighlighted ? 2 : 1}
+          lineWidth={connection.isHighlighted ? 3 : 1}
         />
       ))}
     </group>

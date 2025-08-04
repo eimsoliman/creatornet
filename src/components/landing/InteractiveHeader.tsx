@@ -11,7 +11,7 @@ export const InteractiveHeader = () => {
       <div className="absolute inset-0">
         <Canvas
           camera={{ 
-            position: [0, 0, 15], 
+            position: [3, 0, 15], 
             fov: 60,
             near: 0.1,
             far: 1000
@@ -44,7 +44,7 @@ export const InteractiveHeader = () => {
       </div>
 
       {/* Minimal Hero Content Overlay */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen pointer-events-none">
+      <div className="relative z-10 flex items-center justify-start min-h-screen pointer-events-none">
         <HeroContent />
       </div>
 

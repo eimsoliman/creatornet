@@ -3,6 +3,8 @@ import { useFrame } from '@react-three/fiber';
 import { CreatorNode } from './CreatorNode';
 import { MediaNode } from './MediaNode';
 import { ConnectionLines } from './ConnectionLines';
+import { CreatorDetailsPanel } from './CreatorDetailsPanel';
+import { MediaDetailsPanel } from './MediaDetailsPanel';
 import * as THREE from 'three';
 
 interface NodeData {
@@ -20,6 +22,7 @@ export const NodeNetwork = () => {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Generate network data
   const networkData = useMemo<NodeData[]>(() => [
@@ -119,13 +122,14 @@ export const NodeNetwork = () => {
   ], []);
 
   useFrame((state) => {
-    if (groupRef.current) {
+    if (groupRef.current && !isPaused) {
       groupRef.current.rotation.y += 0.001;
     }
   });
 
   const handleNodeHover = (nodeId: string | null) => {
     setHoveredNode(nodeId);
+    setIsPaused(nodeId !== null);
   };
 
   const handleNodeClick = (nodeId: string) => {
@@ -133,50 +137,82 @@ export const NodeNetwork = () => {
   };
 
   return (
-    <group ref={groupRef}>
-      {/* Render Nodes */}
-      {networkData.map((node) => {
-        const isHighlighted = hoveredNode === node.id || selectedNode === node.id;
-        const isConnected = selectedNode && node.connections.includes(selectedNode);
-        const shouldDimmed = (hoveredNode || selectedNode) && !isHighlighted && !isConnected;
+    <>
+      <group ref={groupRef}>
+        {/* Render Nodes */}
+        {networkData.map((node) => {
+          const isHighlighted = hoveredNode === node.id || selectedNode === node.id;
+          const isConnected = selectedNode && node.connections.includes(selectedNode);
+          const shouldDimmed = (hoveredNode || selectedNode) && !isHighlighted && !isConnected;
 
-        if (node.type === 'creator') {
+          if (node.type === 'creator') {
+            return (
+              <CreatorNode
+                key={node.id}
+                position={node.position}
+                name={node.name}
+                specialty={node.specialty!}
+                isHighlighted={isHighlighted}
+                isDimmed={shouldDimmed}
+                onHover={() => handleNodeHover(node.id)}
+                onHoverExit={() => handleNodeHover(null)}
+                onClick={() => handleNodeClick(node.id)}
+              />
+            );
+          } else {
+            return (
+              <MediaNode
+                key={node.id}
+                position={node.position}
+                name={node.name}
+                mediaType={node.mediaType!}
+                isHighlighted={isHighlighted}
+                isDimmed={shouldDimmed}
+                onHover={() => handleNodeHover(node.id)}
+                onHoverExit={() => handleNodeHover(null)}
+                onClick={() => handleNodeClick(node.id)}
+              />
+            );
+          }
+        })}
+
+        {/* Render Connection Lines */}
+        <ConnectionLines 
+          networkData={networkData}
+          hoveredNode={hoveredNode}
+          selectedNode={selectedNode}
+        />
+      </group>
+
+      {/* Details Panels */}
+      {selectedNode && (() => {
+        const selectedNodeData = networkData.find(n => n.id === selectedNode);
+        if (!selectedNodeData) return null;
+        
+        if (selectedNodeData.type === 'creator') {
           return (
-            <CreatorNode
-              key={node.id}
-              position={node.position}
-              name={node.name}
-              specialty={node.specialty!}
-              isHighlighted={isHighlighted}
-              isDimmed={shouldDimmed}
-              onHover={() => handleNodeHover(node.id)}
-              onHoverExit={() => handleNodeHover(null)}
-              onClick={() => handleNodeClick(node.id)}
+            <CreatorDetailsPanel
+              creator={{
+                id: selectedNodeData.id,
+                name: selectedNodeData.name,
+                specialty: selectedNodeData.specialty!
+              }}
+              onClose={() => setSelectedNode(null)}
             />
           );
         } else {
           return (
-            <MediaNode
-              key={node.id}
-              position={node.position}
-              name={node.name}
-              mediaType={node.mediaType!}
-              isHighlighted={isHighlighted}
-              isDimmed={shouldDimmed}
-              onHover={() => handleNodeHover(node.id)}
-              onHoverExit={() => handleNodeHover(null)}
-              onClick={() => handleNodeClick(node.id)}
+            <MediaDetailsPanel
+              media={{
+                id: selectedNodeData.id,
+                name: selectedNodeData.name,
+                mediaType: selectedNodeData.mediaType!
+              }}
+              onClose={() => setSelectedNode(null)}
             />
           );
         }
-      })}
-
-      {/* Render Connection Lines */}
-      <ConnectionLines 
-        networkData={networkData}
-        hoveredNode={hoveredNode}
-        selectedNode={selectedNode}
-      />
-    </group>
+      })()}
+    </>
   );
 };

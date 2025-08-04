@@ -21,9 +21,9 @@ export const HeroContent = () => {
   }, []);
 
   return (
-    <div className="text-center max-w-4xl mx-auto px-6 animate-fade-in-up pointer-events-auto">
+    <div className="text-left max-w-2xl ml-8 lg:ml-16 px-6 animate-fade-in-up pointer-events-auto">
       {/* Main Headline */}
-      <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+      <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
         <span className="block text-foreground mb-4">
           Collaborate with your
         </span>

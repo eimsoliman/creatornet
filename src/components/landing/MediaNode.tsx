@@ -101,15 +101,12 @@ export const MediaNode: React.FC<MediaNodeProps> = ({
         </mesh>
       ))}
 
-      {/* Info popup on hover/selection */}
-      {(hovered || isHighlighted) && (
+      {/* Info popup on hover only */}
+      {hovered && !isHighlighted && (
         <Html position={[0, 0.8, 0]} center>
-          <div className="bg-background/95 backdrop-blur-sm neon-border rounded-lg p-3 shadow-lg max-w-xs">
+          <div className="bg-background/95 backdrop-blur-sm border border-primary/20 rounded-lg p-3 shadow-lg max-w-xs">
             <h3 className="font-semibold text-foreground text-sm mb-1">{name}</h3>
-            <p className="text-muted-foreground text-xs">{mediaType}</p>
-            <div className="mt-2 px-2 py-1 bg-foreground/10 neon-border rounded text-xs text-foreground font-medium">
-              Media Project
-            </div>
+            <p className="text-primary text-xs">{mediaType}</p>
           </div>
         </Html>
       )}
